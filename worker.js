@@ -16,7 +16,7 @@
 
 const ACCOUNT_ID = '77f3d6611f5ceab7651744268d434342';
 const STREAM_BASE = `https://api.cloudflare.com/client/v4/accounts/${ACCOUNT_ID}/stream`;
-const CUSTOMER_SUBDOMAIN = 'customer-iy642ze20tqh3xpm.cloudflarestream.com';
+const CUSTOMER_SUBDOMAIN = 'customer-iy642ze20tq7w2hz.cloudflarestream.com';
 
 const cors = {
   'Access-Control-Allow-Origin': '*',
