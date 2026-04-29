@@ -36,6 +36,29 @@
  *   fallback     - Content shown if video fails to load.
  */
 
+
+// Inject baseline styles once
+(function() {
+  if (document.getElementById('stream-video-base-styles')) return;
+  const s = document.createElement('style');
+  s.id = 'stream-video-base-styles';
+  s.textContent = `
+    stream-video { display: block; position: relative; }
+    stream-video[mode="thumbnail"] { display: inline-block; }
+    stream-video > video, stream-video > iframe, stream-video > img {
+      display: block;
+      max-width: 100%;
+    }
+    /* When parent has fixed dimensions (e.g. .hero-video-bg), fill it */
+    stream-video > video[autoplay][muted][loop] {
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+    }
+  `;
+  (document.head || document.documentElement).appendChild(s);
+})();
+
 const DEFAULT_SUBDOMAIN = 'customer-iy642ze20tq7w2hz.cloudflarestream.com';
 
 class StreamVideo extends HTMLElement {
