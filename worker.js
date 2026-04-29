@@ -111,7 +111,7 @@ export default {
       return json({ success: true, uploadURL: data.result.uploadURL, uid: data.result.uid });
     }
 
-    // POST /migrate - copy from URL
+    // POST /migrate - copy from URL (auto-enables MP4 download)
     if (path === '/migrate' && request.method === 'POST') {
       const body = await request.json().catch(() => ({}));
       if (!body.url) return err('url required');
@@ -124,12 +124,26 @@ export default {
         }),
       });
       if (!data.success) return err(data.errors?.[0]?.message || 'migrate failed', 500);
+      
+      // Fire-and-forget: trigger MP4 download generation
+      // (only succeeds once video is ready, so retry is needed for new uploads)
+      streamFetch(env, `/${data.result.uid}/downloads`, { method: 'POST' }).catch(() => {});
+      
       return json({
         success: true,
         uid: data.result.uid,
         urls: buildPlaybackUrls(data.result.uid),
         status: data.result.status,
+        note: 'MP4 download generation triggered; available within 1-2 min after video is ready',
       });
+    }
+    
+    // POST /:uid/enable-mp4 - manually trigger MP4 download generation
+    if (path.endsWith('/enable-mp4') && request.method === 'POST') {
+      const uid = path.split('/')[1];
+      const data = await streamFetch(env, `/${uid}/downloads`, { method: 'POST' });
+      if (!data.success) return err(data.errors?.[0]?.message || 'enable failed', 500);
+      return json({ success: true, status: data.result.default });
     }
 
     // GET /:uid
