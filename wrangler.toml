@@ -1,0 +1,12 @@
+name = "stream-api"
+main = "worker.js"
+compatibility_date = "2025-01-01"
+account_id = "77f3d6611f5ceab7651744268d434342"
+
+# Secrets (set via: wrangler secret put NAME)
+#   STREAM_API_TOKEN  - Cloudflare Stream API token
+#   STREAM_AUTH_TOKEN - Bearer token clients use to call this Worker
+
+[[routes]]
+pattern = "stream.fosterlabs.org"
+custom_domain = true
